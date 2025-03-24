@@ -51,5 +51,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git push origin HEAD:main  # Push to the main branch
+          git push origin HEAD:master
         continue-on-error: true
