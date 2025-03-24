@@ -21,14 +21,14 @@ jobs:
 
       - name: Log Date
         env:
-          SINGLE_LOGGER: "date"
+          LOGGER: "date"
           LOG_PATH: "logs/dates.csv"
           RETENTION: "30"
         run: sbt run
 
       - name: Log Time
         env:
-          SINGLE_LOGGER: "time"
+          LOGGER: "time"
           LOG_PATH: "logs/times.csv"
           RETENTION: "10"
           PARAM_TIMEZONE: "America/New_York"
