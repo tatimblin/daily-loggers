@@ -1,0 +1,35 @@
+name: Run Loggers
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+  workflow_dispatch:
+
+jobs:
+  log-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Set Up Java & Scala
+        uses: coursier/setup-action@v1
+        with:
+          jvm: 'temurin:17'
+          apps: sbt
+
+      - name: Log Date
+        env:
+          SINGLE_LOGGER: "date"
+          LOG_PATH: "logs/dates.csv"
+          RETENTION: "30"
+        run: sbt run
+
+      - name: Log Time
+        env:
+          SINGLE_LOGGER: "time"
+          LOG_PATH: "logs/times.csv"
+          RETENTION: "10"
+          PARAM_TIMEZONE: "America/New_York"
+        run: sbt run

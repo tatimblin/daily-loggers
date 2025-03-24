@@ -1,0 +1,38 @@
+name: "Daily Logger"
+description: "Logs data to a CSV file with retention policy"
+author: "Tristan Timblin"
+inputs:
+  logger:
+    description: "The logger to run (e.g., 'date' or 'time')"
+    required: true
+  log_path:
+    description: "Path to the log file"
+    required: true
+  retention:
+    description: "Number of days to retain log entries"
+    required: false
+    default: "30"
+  param_timezone:
+    description: "Timezone for time logger (if applicable)"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+
+    - name: Set Up Java & Scala
+      uses: coursier/setup-action@v1
+      with:
+        jvm: 'temurin:17'
+        apps: sbt
+
+    - name: Run Logger
+      env:
+        LOGGER: ${{ inputs.logger }}
+        LOG_PATH: ${{ inputs.log_path }}
+        RETENTION: ${{ inputs.retention }}
+        PARAM_TIMEZONE: ${{ inputs.param_timezone }}
+      run: sbt run
+      shell: bash
