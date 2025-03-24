@@ -25,6 +25,7 @@ jobs:
           LOG_PATH: "logs/dates.csv"
           RETENTION: "30"
         run: sbt run
+        continue-on-error: true
 
       - name: Log Time
         env:
@@ -33,3 +34,19 @@ jobs:
           RETENTION: "10"
           PARAM_TIMEZONE: "America/New_York"
         run: sbt run
+        continue-on-error: true
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'github-actions@github.com'
+          git add logs/*
+          git commit -m "Update log files with new entries"
+        continue-on-error: true
+
+      - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push origin HEAD:main  # Push to the main branch
+        continue-on-error: true
