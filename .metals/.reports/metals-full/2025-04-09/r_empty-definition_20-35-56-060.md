@@ -1,10 +1,16 @@
+error id: `<none>`.
+file://<WORKSPACE>/src/main/scala/Logger.scala
+empty definition using pc, found symbol in pc: `<none>`.
+empty definition using semanticdb
+empty definition using fallback
+non-local guesses:
+
+offset: 729
+uri: file://<WORKSPACE>/src/main/scala/Logger.scala
+text:
+```scala
 import scala.io.Source
 import java.io.{BufferedWriter, PrintWriter, File, FileWriter}
-
-object Logger {
-  val COLOR_ENTER = "\u001b[93m"
-  val COLOR_RESET = "\u001b[0m"
-}
 
 trait Logger {
     def name: String
@@ -16,14 +22,19 @@ trait Logger {
     createParentDirectory(file)
     createFile(file)
 
-    trimLogFileToRetention(file, retentionCount)
+    val lineCount = countLines(logFilePath)
+    if (lineCount >= retentionCount) {
+      removeOldestEntry(logFilePath)
+    }
 
     val writer = new PrintWriter(new FileWriter(file, true))
     val logEntry = generateLogEntry(params)
     writer.println(logEntry)
     writer.close()
     
-    println(s"${Logger.COLOR_ENTER}Logged: $logEntry to $logFilePath${Logger.COLOR_RESET}")
+    val GREEN = "\u001b[92m"
+    val RESET = "\u001b[0m"
+    println(s"@@${GREEN}Logged: $logEntry to $logFilePath")
   }
 
   private def removeOldestEntry(logFilePath: String): Unit = {
@@ -39,18 +50,6 @@ trait Logger {
     val writer = new PrintWriter(new FileWriter(file))
     lines.tail.foreach(line => writer.println(line))
     writer.close()
-  }
-
-  private def trimLogFileToRetention(file: File, retentionCount: Int): Unit = {
-    if (!file.exists()) return
-
-    val lines = scala.io.Source.fromFile(file).getLines().toList
-    if (lines.length >= retentionCount) {
-      val trimmed = lines.takeRight(retentionCount - 1)
-      val writer = new PrintWriter(file)
-      trimmed.foreach(writer.println)
-      writer.close()
-    }
   }
 
   private def countLines(filePath: String): Int = {
@@ -76,3 +75,10 @@ trait Logger {
     }
   }
 }
+
+```
+
+
+#### Short summary: 
+
+empty definition using pc, found symbol in pc: `<none>`.
